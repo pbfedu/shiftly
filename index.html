@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>Shiftly - Escriu amb Shift</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background: #58cc02;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .challenge-char {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .hint {
+      color: #888;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"] {
+      font-size: 2rem;
+      text-align: center;
+      padding: 0.5rem;
+      width: 60px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input.correct {
+      border-color: green;
+    }
+
+    input.incorrect {
+      border-color: red;
+    }
+
+    .feedback {
+      height: 1.5rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .feedback.correct {
+      color: green;
+    }
+
+    .feedback.incorrect {
+      color: red;
+    }
+
+    button {
+      background: #58cc02;
+      border: none;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    .progress {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <i class="fas fa-keyboard"></i> Shiftly - Escriu amb Shift
+  </header>
+
+  <div class="card">
+    <div class="challenge-char" id="charDisplay">!</div>
+    <div class="hint" id="hintText">Fes servir Majúscules + 1</div>
+    <input type="text" id="userInput" maxlength="1" autofocus autocomplete="off"/>
+    <div class="feedback" id="feedback"></div>
+    <button onclick="nextChallenge()">Següent</button>
+    <div class="progress" id="progress">Progrés: 0/0</div>
+  </div>
+
+  <footer>&copy; 2025 Shiftly</footer>
+
+  <script>
+    const shiftCharacters = {
+      '!': '1',
+      '"': '2',
+      '·': '3',
+      '$': '4',
+      '%': '5',
+      '&': '6',
+      '/': '7',
+      '(': '8',
+      ')': '9',
+      '=': '0',
+      '?': "'",
+      '¿': '+',
+      ':': '.'
+    };
+
+    let currentChar = '';
+    let correct = 0;
+    let total = 0;
+
+    const charDisplay = document.getElementById('charDisplay');
+    const hintText = document.getElementById('hintText');
+    const userInput = document.getElementById('userInput');
+    const feedback = document.getElementById('feedback');
+    const progress = document.getElementById('progress');
+
+    function getRandomChar() {
+      const keys = Object.keys(shiftCharacters);
+      return keys[Math.floor(Math.random() * keys.length)];
+    }
+
+    function nextChallenge() {
+      currentChar = getRandomChar();
+      charDisplay.textContent = currentChar;
+      hintText.textContent = Fes servir Majúscules + ${shiftCharacters[currentChar]};
+      userInput.value = '';
+      userInput.className = '';
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      userInput.focus();
+    }
+
+    userInput.addEventListener('input', () => {
+      const val = userInput.value;
+
+      if (val.length === 0) return;
+
+      total++;
+
+      if (val === currentChar) {
+        correct++;
+        feedback.textContent = 'Correcte!';
+        feedback.classList.add('correct');
+        userInput.classList.add('correct');
+      } else {
+        feedback.textContent = 'Incorrecte. Torna-ho a intentar.';
+        feedback.classList.add('incorrect');
+        userInput.classList.add('incorrect');
+        userInput.value = '';
+        total--; // no comptem com a intent real
+        return;
+      }
+
+      progress.textContent = Progrés: ${correct}/${total};
+    });
+
+    // Inici
+    nextChallenge();
+  </script>
+</body>
+</html>
